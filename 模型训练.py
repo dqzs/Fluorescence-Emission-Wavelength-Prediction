@@ -37,7 +37,7 @@ random_data_de_name
 # In[10]:
 
 
-# 第二步：分割数据为训练集、验证集和测试集
+# 第二步：分割数据为训练集和测试集
 train_data, test_data = train_test_split(random_data_de_name, test_size=0.2, random_state=42) 
 
 
