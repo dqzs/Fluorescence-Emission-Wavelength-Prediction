@@ -91,7 +91,7 @@ predictor = TabularPredictor(label=label_column,eval_metric="r2",
                                   feature_prune_kwargs={'prune_threshold': 0.01}, 
                                   auto_stack=True, 
                                   hyperparameters='multimodal',
-                                  presets='medium_quality',
+                                  presets='best_quality',
                                  )
 
 
