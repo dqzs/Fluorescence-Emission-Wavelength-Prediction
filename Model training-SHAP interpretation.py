@@ -18,7 +18,7 @@ from sklearn.model_selection import train_test_split
 
 
 # 加载数据集
-data= pd.read_excel("Cp-data-10.xlsx",index_col=0,)
+data= pd.read_excel("data-9.xlsx",index_col=0,)
 random_data = data.sample(frac =1).reset_index(drop=True)
 
 
@@ -38,21 +38,29 @@ random_data_de_name
 
 
 # 第二步：分割数据为训练集、验证集和测试集
-train_data, temp_data = train_test_split(random_data_de_name, test_size=0.3, random_state=42) 
-valid_data, test_data = train_test_split(temp_data, test_size=0.5, random_state=42)
+train_data, test_data = train_test_split(random_data_de_name, test_size=0.2, random_state=42) 
+
 
 
 # In[12]:
 
 
-label = 'Cp'
+label = 'EM'
 
 
 # In[ ]:
 
 
 # 第三步：配置并启动AutoGluon训练
-predictor = TabularPredictor(label=label,eval_metric="r2").fit(train_data, tuning_data=valid_data, presets='best_quality',use_bag_holdout=True)
+predictor = TabularPredictor(label=label_column,eval_metric="r2",problem_type="regression").fit(train_data_de_name, 
+                                                                                                tuning_data=test_data_de_name, 
+                                                                                                presets='best_quality',
+                                                                                                use_bag_holdout=True,
+                                                                                                auto_stack=True, 
+                                                                                                hyperparameters='multimodal',
+                                                                                                #feature_prune_kwargs={'prune_threshold': 0.01},
+                                                                                                num_bag_folds=5,
+                                                                                               )
 
 
 # In[19]:
@@ -71,7 +79,7 @@ print(scores)
 # 第四步：评估模型
 y_train_pred = predictor.predict(train_data)
 y_test_pred = predictor.predict(test_data)
-y_valid_pred = predictor.predict(valid_data)
+
 
 
 # In[22]:
@@ -79,7 +87,7 @@ y_valid_pred = predictor.predict(valid_data)
 
 print('r2 score on train data: ', r2_score(train_data[label], y_train_pred))
 print('r2 score on test data: ', r2_score(test_data[label], y_test_pred))
-print('r2 score on valid data: ', r2_score(valid_data[label], y_valid_pred))
+
 
 
 # In[23]:
@@ -91,14 +99,14 @@ predictor.leaderboard()
 # In[24]:
 
 
-predictor.feature_importance(valid_data)
+predictor.feature_importance(train_data)
 
 
 # In[25]:
 
 
 # 第六步：图形化模型解释
-importance_df = predictor.feature_importance(valid_data)
+importance_df = predictor.feature_importance(train_data)
 plt.barh(importance_df.index, importance_df['importance'])
 plt.xlabel('Feature Importance')
 plt.show() 
@@ -123,13 +131,7 @@ predictor.leaderboard(test_data, extra_metrics=['mse', 'rmse', 'mae', 'median_ab
 # In[28]:
 
 
-# 删除其余模型（减少内存开销）
-predictor.delete_models(models_to_keep='best')
-# 输出最优模型
-predictor.get_model_best()
 
-
-# In[44]:
 
 
 predictor.fit_summary(show_plot=True)
