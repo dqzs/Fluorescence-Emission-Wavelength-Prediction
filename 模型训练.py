@@ -17,37 +17,34 @@ from sklearn.model_selection import train_test_split
 # In[2]:
 
 
-# 加载数据
-train_data= pd.read_excel("train-修改.xlsx",index_col=0)
-train_data
+# 加载数据集
+data= pd.read_excel("data-9.xlsx",index_col=0,)
+random_data = data.sample(frac =1).reset_index(drop=True)
 
 
-# In[3]:
+# In[125]:
 
 
-train_data_de_name= train_data.iloc[:,1:]
-train_data_de_name
+random_data_de_name = random_data.iloc[:,1:]
 
 
-# In[8]:
+# In[126]:
 
 
-# 加载数据
-test_data= pd.read_excel("test-修改.xls",index_col=0)
-test_data
-
-
-# In[9]:
-
-
-test_data_de_name= test_data.iloc[:,1:]
-test_data_de_name
+random_data_de_name
 
 
 # In[10]:
 
 
-label_column = train_data.columns[1]
+# 第二步：分割数据为训练集、验证集和测试集
+train_data, test_data = train_test_split(random_data_de_name, test_size=0.2, random_state=42) 
+
+
+# In[10]:
+
+
+label_column = 'EM'
 label_column
 
 
@@ -79,27 +76,8 @@ predictor.path
 # In[14]:
 
 
-train_true=pd.read_excel("train-.xlsx",index_col=0)
-train_true
 
 
-# In[15]:
-
-
-test_true=pd.read_excel("test.xls",index_col=0)
-test_true
-
-
-# In[16]:
-
-
-predictor.leaderboard(test_true)
-
-
-# In[19]:
-
-
-predictor.leaderboard(train_true)
 
 
 # In[20]:
@@ -135,13 +113,13 @@ predictor.predict(train_data).head(10)
 # In[26]:
 
 
-predictor.leaderboard(test_true, extra_metrics=['mae', 'rmse',  'pearsonr'], silent=True)
+predictor.leaderboard(test_data, extra_metrics=['mae', 'rmse',  'pearsonr'], silent=True)
 
 
 # In[27]:
 
 
-predictor.leaderboard(train_true, extra_metrics=['mae', 'rmse',  'pearsonr'], silent=True)
+predictor.leaderboard(train_data, extra_metrics=['mae', 'rmse',  'pearsonr'], silent=True)
 
 
 # In[ ]:
