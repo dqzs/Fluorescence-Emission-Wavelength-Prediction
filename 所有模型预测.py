@@ -18,7 +18,7 @@ from sklearn.model_selection import train_test_split
 
 
 # 加载数据
-train_data= pd.read_excel("train-.xlsx",index_col=0)
+train_data= pd.read_excel("train.xlsx",index_col=0)
 train_data
 
 
