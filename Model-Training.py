@@ -51,8 +51,8 @@ label_column
 # In[11]:
 
 
-predictor = TabularPredictor(label=label_column,eval_metric="r2",problem_type="regression").fit(train_data_de_name, 
-                                                                                                tuning_data=test_data_de_name, 
+predictor = TabularPredictor(label=label_column,eval_metric="r2",problem_type="regression").fit(train_data, 
+                                                                                                tuning_data=test_data, 
                                                                                                 presets='best_quality',
                                                                                                 use_bag_holdout=True,
                                                                                                 #path='25-flu-autogluon',
